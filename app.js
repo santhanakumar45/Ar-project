@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
 const cors = require('cors')
+const jsonData = require("./ar.path")
 const PORT = 3000;
 
-app.use(express.json())
+// app.use(express.json())
 app.use(cors())
-
 
 
 // Without middleware
@@ -14,13 +14,18 @@ app.get('/google', (req, res) => {
 });
 
 
-app.get('/ar/view/:path', (req, res) => {
-    console.log(req.params)
-    const { path } = req.params;
-    console.log(path)
-    res.redirect(`https://biztel.co.in/${path}`);
-});
+app.get('/:QR', (req, res) => {
+    const { QR } = req.params; // Extract the ID from request parameters
+    console.log("ID received:", QR);
 
+    const uri = jsonData[QR]; // Access the correct URL based on the ID
+    console.log("Value:", QR);
+    
+    if (!uri) {
+        return res.status(404).send('Model not found');
+    }
+    res.redirect(uri); // Redirect to the resolved URL
+});
 
 
 app.listen(PORT, function (err) {
